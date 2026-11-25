@@ -1,0 +1,116 @@
+﻿@model English_Vocabulary_Learning_Website.Models.StatsViewModel
+
+@{
+    ViewBag.Title = "Thống kê học tập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center fw-bold text-success mb-4">THỐNG KÊ HỌC TẬP</h2>
+
+@if (Model.TotalAttempts == 0)
+{
+    <div class="alert alert-warning text-center">
+        Bạn chưa làm bài quiz nào. Hãy làm vài bài rồi quay lại xem thống kê nhé.
+        <a href="@Url.Action("Index", "Learn")" class="alert-link">Về trang chủ</a>
+    </div>
+}
+else
+{
+    <div class="row g-3 mb-4 text-center">
+        <div class="col-md-4">
+            <div class="card bg-black border-secondary rounded-4 p-3">
+                <div class="text-secondary small">Số lần làm bài</div>
+                <div class="display-6 fw-bold text-info">@Model.TotalAttempts</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-black border-secondary rounded-4 p-3">
+                <div class="text-secondary small">Điểm trung bình</div>
+                <div class="display-6 fw-bold text-warning">@Model.OverallPercent%</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-black border-secondary rounded-4 p-3">
+                <div class="text-secondary small">Số chủ đề đã làm</div>
+                <div class="display-6 fw-bold text-light">@Model.Topics.Count</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card bg-black border-success rounded-4 p-3 h-100">
+                <div class="text-secondary small">Chủ đề làm tốt nhất</div>
+                <div class="fs-4 fw-bold text-success">@Model.Best.TopicName</div>
+                <div>Trung bình @Model.Best.AvgPercent% (@Model.Best.Attempts lần làm)</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-black border-danger rounded-4 p-3 h-100">
+                <div class="text-secondary small">Chủ đề cần luyện thêm</div>
+                @if (Model.Topics.Count > 1)
+                {
+                    <div class="fs-4 fw-bold text-danger">@Model.Weakest.TopicName</div>
+                    <div>Trung bình @Model.Weakest.AvgPercent% (@Model.Weakest.Attempts lần làm)</div>
+                }
+                else
+                {
+                    <div class="text-light">Hãy làm thêm chủ đề khác để so sánh.</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-black border-secondary rounded-4 p-3 mb-4">
+        <h5 class="text-light mb-3">Điểm trung bình theo ngày (%)</h5>
+        <canvas id="dayChart" height="110"></canvas>
+    </div>
+
+    <div class="card bg-black border-secondary rounded-4 p-3 mb-4">
+        <h5 class="text-light mb-3">Điểm trung bình theo chủ đề (%)</h5>
+        <canvas id="topicChart" height="110"></canvas>
+    </div>
+}
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        if (typeof Chart !== 'undefined' && document.getElementById('dayChart')) {
+            Chart.defaults.color = '#ced4da';
+
+            // Biểu đồ theo ngày
+            new Chart(document.getElementById('dayChart'), {
+                type: 'line',
+                data: {
+                    labels: @Html.Raw(Json.Encode(Model.Days.Select(d => d.Label))),
+                    datasets: [{
+                        label: 'Điểm TB (%)',
+                        data: @Html.Raw(Json.Encode(Model.Days.Select(d => d.AvgPercent))),
+                        borderColor: '#198754',
+                        backgroundColor: 'rgba(25,135,84,0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: { scales: { y: { min: 0, max: 100 } } }
+            });
+
+            // Biểu đồ theo chủ đề (xanh >= 80, vàng 50-79, đỏ < 50)
+            var topicData = @Html.Raw(Json.Encode(Model.Topics.Select(t => t.AvgPercent)));
+            new Chart(document.getElementById('topicChart'), {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(Json.Encode(Model.Topics.Select(t => t.TopicName))),
+                    datasets: [{
+                        label: 'Điểm TB (%)',
+                        data: topicData,
+                        backgroundColor: topicData.map(function (v) {
+                            return v >= 80 ? '#198754' : (v >= 50 ? '#ffc107' : '#dc3545');
+                        })
+                    }]
+                },
+                options: { indexAxis: 'y', scales: { x: { min: 0, max: 100 } } }
+            });
+        }
+    </script>
+}

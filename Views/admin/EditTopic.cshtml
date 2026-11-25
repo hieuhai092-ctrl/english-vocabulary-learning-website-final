@@ -1,0 +1,126 @@
+﻿
+@{
+    ViewBag.Title = "EditTopic";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>EditTopic</h2>
+
+@model English_Vocabulary_Learning_Website.Models.Topic
+@{
+    ViewBag.Title = "Chỉnh sửa chủ đề - Admin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var initialImg = !string.IsNullOrEmpty(Model.ImageUrl)
+        ? Model.ImageUrl
+        : "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=600&q=80";
+}
+
+<style>
+    .edit-card {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    .gradient-heading {
+        background: linear-gradient(to right, #34d399, #38bdf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+
+    .form-label-dark {
+        color: #cbd5e1;
+        font-weight: 600;
+        font-size: 0.92rem;
+        margin-bottom: 8px;
+    }
+
+    .input-dark {
+        background-color: #0f172a !important;
+        border: 1px solid #334155 !important;
+        color: #f8fafc !important;
+        border-radius: 12px !important;
+        padding: 12px 16px;
+    }
+
+        .input-dark:focus {
+            border-color: #38bdf8 !important;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+        }
+
+    .preview-box {
+        background-color: #0f172a;
+        border: 1.5px dashed #475569;
+        border-radius: 16px;
+        height: 200px;
+        overflow: hidden;
+    }
+
+        .preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .btn-update-topic {
+        background: linear-gradient(135deg, #0ea5e9, #0284c7);
+        border: none;
+        color: #fff;
+        font-weight: 700;
+        border-radius: 50px;
+        padding: 11px 32px;
+        box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35);
+    }
+</style>
+
+<div class="container py-4 pb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="edit-card">
+                <div class="mb-4">
+                    <span class="badge bg-info bg-opacity-15 text-info border border-info border-opacity-25 px-3 py-1 rounded-pill mb-2">
+                        ✏️ Cập nhật dữ liệu
+                    </span>
+                    <h2 class="gradient-heading mb-1">Chỉnh sửa Chủ đề #@Model.Id</h2>
+                    <p class="text-secondary small mb-0">Thay đổi tên gọi, mô tả hoặc hình ảnh đại diện cho chủ đề</p>
+                </div>
+
+                @using (Html.BeginForm("EditTopic", "Admin", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Id)
+
+                    <div class="mb-3">
+                        <label class="form-label-dark">Tên chủ đề <span class="text-danger">*</span></label>
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-dark", required = "required" })
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label-dark">Mô tả ngắn</label>
+                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control input-dark", rows = "3" })
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label-dark">Đường dẫn hình ảnh (Image URL)</label>
+                        @Html.TextBoxFor(m => m.ImageUrl, new { @class = "form-control input-dark", id = "imageUrlInput" })
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label-dark d-block">Xem trước ảnh bìa</label>
+                        <div class="preview-box">
+                            <img id="imagePreview" src="@initialImg" alt="Preview" />
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-2">
+                        <a href="@Url.Action("Index", "Admin")" class="btn btn-outline-secondary rounded-pill px-4">⬅️ Quay lại</a>
+                        <button type="submit" class="btn btn-update-topic">💾 Lưu thay đổi</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

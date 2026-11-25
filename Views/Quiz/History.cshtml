@@ -1,0 +1,224 @@
+﻿@model IEnumerable<English_Vocabulary_Learning_Website.Models.Result>
+@{
+    ViewBag.Title = "Lịch sử làm bài trắc nghiệm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int stt = 1;
+}
+
+<style>
+    /* Banner tiêu đề đồng bộ toàn trang */
+    .history-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #064e3b 100%);
+        border: 1px solid rgba(52, 211, 153, 0.25);
+        border-radius: 20px;
+        padding: 32px 28px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .history-hero::after {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+    .history-gradient-title {
+        background: linear-gradient(to right, #34d399, #38bdf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+
+    /* Khung bảng dữ liệu Dark Glass */
+    .history-card-wrapper {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .table-history-modern {
+        margin-bottom: 0;
+        color: #e2e8f0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .table-history-modern thead th {
+            background-color: #0f172a;
+            color: #94a3b8;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+            padding: 16px 20px;
+            border-top: 1px solid #334155;
+            border-bottom: 1px solid #334155;
+        }
+
+            .table-history-modern thead th:first-child {
+                border-top-left-radius: 12px;
+                border-bottom-left-radius: 12px;
+                border-left: 1px solid #334155;
+            }
+
+            .table-history-modern thead th:last-child {
+                border-top-right-radius: 12px;
+                border-bottom-right-radius: 12px;
+                border-right: 1px solid #334155;
+            }
+
+        .table-history-modern tbody tr {
+            transition: background-color 0.25s ease;
+        }
+
+            .table-history-modern tbody tr:hover {
+                background-color: rgba(52, 211, 153, 0.06);
+            }
+
+        .table-history-modern td {
+            padding: 16px 20px;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+    /* Badge điểm số */
+    .score-pill {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .score-high {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .score-mid {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .score-low {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    /* Trạng thái trống (chưa có dữ liệu) */
+    .empty-history-box {
+        background: rgba(15, 23, 42, 0.55);
+        border: 1px dashed #475569;
+        border-radius: 16px;
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    /* Nút làm bài kiểm tra mới */
+    .btn-new-quiz {
+        background: linear-gradient(135deg, #10b981, #059669);
+        border: none;
+        color: #fff !important;
+        font-weight: 700;
+        border-radius: 50px;
+        padding: 11px 28px;
+        box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+        transition: all 0.25s ease;
+    }
+
+        .btn-new-quiz:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(16, 185, 129, 0.5);
+        }
+</style>
+
+<div class="container py-4 pb-5">
+    <!-- Banner tiêu đề -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-10">
+            <div class="history-hero d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div>
+                    <span class="badge bg-info bg-opacity-15 text-info border border-info border-opacity-25 px-3 py-1 rounded-pill mb-2">
+                        📊 Bảng theo dõi thành tích cá nhân
+                    </span>
+                    <h2 class="history-gradient-title mb-1">LỊCH SỬ LÀM BÀI TRẮC NGHIỆM</h2>
+                    <p class="text-light opacity-75 small mb-0">Xem lại điểm số và thời gian hoàn thành các bài kiểm tra từ vựng của bạn</p>
+                </div>
+                <div>
+                    <a href="@Url.Action("Index", "Learn")" class="btn btn-new-quiz">
+                        🚀 Làm bài kiểm tra mới
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Khung danh sách lịch sử -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="history-card-wrapper">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-history-modern text-center align-middle">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">STT</th>
+                                    <th class="text-start" style="width: 35%;">Chủ đề</th>
+                                    <th style="width: 25%;">Điểm số</th>
+                                    <th style="width: 30%;">Thời gian nộp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    double ratio = item.TotalQuestions > 0 ? (double)item.Score / item.TotalQuestions : 0;
+                                    string scoreClass = ratio >= 0.8 ? "score-high" : (ratio >= 0.5 ? "score-mid" : "score-low");
+
+                                    <tr>
+                                        <td class="fw-bold text-secondary">#@stt</td>
+                                        <td class="text-start fw-bold" style="color: #34d399;">
+                                            @(item.Topic != null ? item.Topic.Name : "Chủ đề #" + item.TopicId)
+                                        </td>
+                                        <td>
+                                            <span class="score-pill @scoreClass">
+                                                @item.Score / @item.TotalQuestions câu
+                                            </span>
+                                        </td>
+                                        <td class="text-light opacity-75">
+                                            🕒 @item.CompletedAt.ToString("dd/MM/yyyy HH:mm")
+                                        </td>
+                                    </tr>
+                                    stt++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <!-- Hiển thị khi chưa có lịch sử làm bài nào -->
+                    <div class="empty-history-box">
+                        <div class="fs-1 mb-2">📝</div>
+                        <h5 class="text-white fw-bold mb-2">Chưa có lịch sử làm bài nào được ghi nhận</h5>
+                        <p class="text-secondary small mb-4">Hãy chọn một chủ đề từ vựng yêu thích và thử sức với bài trắc nghiệm đầu tiên ngay bây giờ!</p>
+                        <a href="@Url.Action("Index", "Learn")" class="btn btn-new-quiz">
+                            ✨ Bắt đầu làm bài ngay
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

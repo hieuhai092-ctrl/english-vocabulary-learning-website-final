@@ -1,0 +1,64 @@
+﻿@model IEnumerable<English_Vocabulary_Learning_Website.Models.Quiz>
+@{
+    ViewBag.Title = "Bài kiểm tra trắc nghiệm";
+    var topic = ViewBag.Topic as English_Vocabulary_Learning_Website.Models.Topic;
+    int index = 0;
+}
+
+<div class="container py-4 text-light" style="max-width: 900px;">
+    <!-- Tiêu đề chủ đề -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0">Bài kiểm tra: <span class="text-success">@(topic != null ? topic.Name : "Chủ đề")</span></h2>
+        <span class="badge bg-dark border border-secondary px-3 py-2">Tổng: @(Model != null ? Model.Count() : 0) câu</span>
+    </div>
+    <hr class="border-secondary" />
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning bg-dark text-warning border-warning rounded-4 p-4">
+            Chủ đề này hiện chưa có câu hỏi trắc nghiệm nào!
+        </div>
+        <a href="@Url.Action("Index", "Learn")" class="btn btn-outline-light rounded-pill px-4">← Quay lại Trang chủ</a>
+    }
+    else
+    {
+        using (Html.BeginForm("SubmitQuiz", "Learn", FormMethod.Post))
+        {
+            @Html.Hidden("TopicId", topic != null ? topic.Id : 1)
+
+            foreach (var q in Model)
+            {
+                <div class="card bg-black border border-secondary rounded-4 p-3 mb-4 text-light shadow-lg">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-light mb-3">Câu @(index + 1): @q.Question</h5>
+                        <input type="hidden" name="Answers[@index].QuizId" value="@q.Id" />
+
+                        <div class="form-check mb-2">
+                            <input class="form-check-input bg-dark border-secondary" type="radio" name="Answers[@index].SelectedAnswer" value="A" id="q@(q.Id)_A" required>
+                            <label class="form-check-label text-secondary" for="q@(q.Id)_A">A. @q.OptionA</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input bg-dark border-secondary" type="radio" name="Answers[@index].SelectedAnswer" value="B" id="q@(q.Id)_B">
+                            <label class="form-check-label text-secondary" for="q@(q.Id)_B">B. @q.OptionB</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input bg-dark border-secondary" type="radio" name="Answers[@index].SelectedAnswer" value="C" id="q@(q.Id)_C">
+                            <label class="form-check-label text-secondary" for="q@(q.Id)_C">C. @q.OptionC</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input bg-dark border-secondary" type="radio" name="Answers[@index].SelectedAnswer" value="D" id="q@(q.Id)_D">
+                            <label class="form-check-label text-secondary" for="q@(q.Id)_D">D. @q.OptionD</label>
+                        </div>
+                    </div>
+                </div>
+                index++;
+            }
+
+            <!-- Nút nộp bài -->
+            <div class="d-flex gap-3 mb-5">
+                <button type="submit" class="btn btn-success px-5 py-2 rounded-pill fw-bold shadow-sm">Nộp bài</button>
+                <a href="@Url.Action("Index", "Learn")" class="btn btn-outline-secondary px-4 py-2 rounded-pill">Hủy</a>
+            </div>
+        }
+    }
+</div>

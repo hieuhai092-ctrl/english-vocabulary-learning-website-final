@@ -1,0 +1,374 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - English Vocabulary Learning Website</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        /* CSS cho Chatbox nổi */
+        #chat-widget {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        #chat-toggle-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #198754;
+            color: #fff;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.5);
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            #chat-toggle-btn:hover {
+                transform: scale(1.08);
+            }
+
+        #chat-box {
+            width: 345px;
+            max-width: calc(100vw - 48px);
+            height: 450px;
+            background: #1e2227;
+            border: 1px solid #495057;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            margin-bottom: 12px;
+        }
+
+        .chat-header {
+            background: #198754;
+            color: #fff;
+            padding: 12px 16px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chat-close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 14px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #16191d;
+        }
+
+        .msg {
+            max-width: 82%;
+            padding: 9px 13px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.45;
+            word-wrap: break-word;
+        }
+
+        .bot-msg {
+            background: #2b3036;
+            color: #e9ecef;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .user-msg {
+            background: #198754;
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        /* Thanh nút bấm lệnh nhanh */
+        .chat-quick-actions {
+            display: flex;
+            gap: 6px;
+            padding: 8px 10px 4px 10px;
+            background: #1e2227;
+            border-top: 1px solid #2c3034;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .quick-btn {
+            background: #2b3036;
+            color: #20c997;
+            border: 1px solid #198754;
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+            .quick-btn:hover {
+                background: #198754;
+                color: #fff;
+            }
+
+        .chat-footer {
+            display: flex;
+            padding: 8px 10px 10px 10px;
+            background: #1e2227;
+            gap: 8px;
+        }
+
+        #chat-input {
+            flex: 1;
+            background: #2b3036;
+            border: 1px solid #495057;
+            color: #fff;
+            border-radius: 8px;
+            padding: 7px 12px;
+            outline: none;
+            font-size: 14px;
+        }
+
+            #chat-input:focus {
+                border-color: #198754;
+            }
+
+        #chat-send-btn {
+            background: #198754;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+            #chat-send-btn:hover {
+                background: #157347;
+            }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <!-- Thanh Menu điều hướng -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black mb-4 shadow border-bottom border-secondary">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-success" href="@Url.Action("Index", "Learn")">📚 English App</a>
+
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Learn")">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Search", "Vocabulary")">Tra từ vựng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "Quiz")">Kiểm tra trắc nghiệm</a>
+                    </li>
+                    @if ((string)Session["Role"] == "Admin")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Admin")">Quản trị (Admin)</a>
+                        </li>
+                    }
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("About", "Home")">Giới thiệu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Contact", "Home")">Liên hệ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("History", "Quiz")">Lịch sử làm bài</a>
+                    </li>
+                    @if (Session["UserId"] != null)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Stats")">Thống kê</a>
+                        </li>
+                    }
+                </ul>
+
+                <ul class="navbar-nav ms-auto align-items-center">
+                    @if (Session["Username"] != null)
+                    {
+                        <li class="nav-item d-flex align-items-center me-3">
+                            <span class="text-light">
+                                Xin chào, <strong class="text-success">@Session["Username"]</strong>
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Logout", "Account")" class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-sm">Đăng xuất</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item me-2">
+                            <a href="@Url.Action("Login", "Account")" class="btn btn-outline-light btn-sm rounded-pill px-3">Đăng nhập</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Register", "Account")" class="btn btn-success btn-sm rounded-pill px-3">Đăng ký</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Nội dung chính -->
+    <div class="container body-content">
+        @RenderBody()
+        <hr class="border-secondary" />
+        <footer>
+            <p class="text-muted text-center">&copy; @DateTime.Now.Year - English Vocabulary Learning Website</p>
+        </footer>
+    </div>
+
+    <!-- WIDGET CHATBOX NỔI -->
+    <div id="chat-widget" data-ask-url="@Url.Action("Ask", "Chat")">
+        <div id="chat-box" class="d-none">
+            <div class="chat-header">
+                <span>🤖 Trợ lý English App</span>
+                <button type="button" id="chat-close-btn" title="Đóng">&times;</button>
+            </div>
+
+            <div id="chat-messages" class="chat-body">
+                <div class="msg bot-msg">
+                    Xin chào! 👋 Mình có thể giúp bạn tra từ, đố vui từ vựng, sửa câu tiếng Anh hoặc gợi ý bài ôn tập. Chọn nhanh bên dưới hoặc nhập câu hỏi nhé!
+                </div>
+            </div>
+
+            <!-- Các nút chức năng nhanh -->
+            <div class="chat-quick-actions">
+                <button type="button" class="quick-btn" data-cmd="quiz">🎯 Đố vui</button>
+                <button type="button" class="quick-btn" data-cmd="gợi ý">✨ Gợi ý 5 từ</button>
+                <button type="button" class="quick-btn" data-cmd="ôn tập">📊 Ôn tập</button>
+                <button type="button" class="quick-btn" data-cmd="hướng dẫn">ℹ️ Trợ giúp</button>
+            </div>
+
+            <div class="chat-footer">
+                <input type="text" id="chat-input" placeholder="Nhập từ, câu tiếng Anh hoặc 'quiz'..." autocomplete="off" />
+                <button type="button" id="chat-send-btn">Gửi</button>
+            </div>
+        </div>
+
+        <button type="button" id="chat-toggle-btn" title="Mở trợ lý từ vựng">💬</button>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <!-- Script xu ly Chatbox -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var widget = document.getElementById("chat-widget");
+            var toggleBtn = document.getElementById("chat-toggle-btn");
+            var closeBtn = document.getElementById("chat-close-btn");
+            var chatBox = document.getElementById("chat-box");
+            var chatInput = document.getElementById("chat-input");
+            var sendBtn = document.getElementById("chat-send-btn");
+            var messagesDiv = document.getElementById("chat-messages");
+            var askUrl = widget ? (widget.getAttribute("data-ask-url") || "/Chat/Ask") : "/Chat/Ask";
+
+            if (!toggleBtn || !chatBox) return;
+
+            toggleBtn.addEventListener("click", function () {
+                if (!chatBox) return;
+                chatBox.classList.toggle("d-none");
+                if (!chatBox.classList.contains("d-none") && chatInput) {
+                    chatInput.focus();
+                }
+            });
+
+            if (closeBtn) {
+                closeBtn.addEventListener("click", function () {
+                    if (chatBox) chatBox.classList.add("d-none");
+                });
+            }
+
+            function appendMessage(content = "", isUser = false) {
+                if (!messagesDiv) return;
+                var div = document.createElement("div");
+                div.className = "msg " + (isUser ? "user-msg" : "bot-msg");
+                if (isUser) {
+                    div.textContent = String(content);
+                } else {
+                    div.innerHTML = String(content);
+                }
+                messagesDiv.appendChild(div);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+
+            function sendMessage() {
+                if (!chatInput || !(chatInput instanceof HTMLInputElement)) return;
+                var text = chatInput.value.trim();
+                if (!text) return;
+
+                appendMessage(text, true);
+                chatInput.value = "";
+
+                fetch(askUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+                    body: "message=" + encodeURIComponent(text)
+                })
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        appendMessage(data.reply || "Không có phản hồi.", false);
+                    })
+                    .catch(function () {
+                        appendMessage("⚠️ Không kết nối được máy chủ.", false);
+                    });
+            }
+
+            if (sendBtn) sendBtn.addEventListener("click", sendMessage);
+            if (chatInput) {
+                chatInput.addEventListener("keydown", function (event) {
+                    if (event instanceof KeyboardEvent && event.key === "Enter") {
+                        event.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
+
+            // Xu ly click cho 4 nut lenh nhanh
+            var quickBtns = document.querySelectorAll(".quick-btn");
+            quickBtns.forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    var cmd = btn.getAttribute("data-cmd");
+                    if (cmd && chatInput instanceof HTMLInputElement) {
+                        chatInput.value = cmd;
+                        sendMessage();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

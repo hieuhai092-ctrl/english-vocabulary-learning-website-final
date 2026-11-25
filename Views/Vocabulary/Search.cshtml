@@ -1,0 +1,87 @@
+﻿@model IEnumerable<English_Vocabulary_Learning_Website.Models.Vocabulary>
+
+@{
+    ViewBag.Title = "Tìm kiếm từ vựng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string currentLevel = ViewBag.Level as string;
+}
+
+<h2 class="mb-4 text-center">Tìm kiếm từ vựng</h2>
+
+<form method="get" action="@Url.Action("Search", "Vocabulary")" class="row g-2 mb-4">
+    <div class="col-md-4">
+        <input type="text" name="q" value="@ViewBag.Q" class="form-control"
+               placeholder="Nhập từ tiếng Anh hoặc nghĩa tiếng Việt..." />
+    </div>
+    <div class="col-md-3">
+        @Html.DropDownList("topicId", (SelectList)ViewBag.Topics, "-- Tất cả chủ đề --", new { @class = "form-select" })
+    </div>
+    <div class="col-md-3">
+        <select name="level" class="form-select">
+            <option value="">-- Mọi độ khó --</option>
+            <option value="Easy" selected="@(currentLevel == "Easy")">Dễ</option>
+            <option value="Medium" selected="@(currentLevel == "Medium")">Trung bình</option>
+            <option value="Hard" selected="@(currentLevel == "Hard")">Khó</option>
+        </select>
+    </div>
+    <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-success">Tìm</button>
+    </div>
+</form>
+
+<p class="text-secondary">Tìm thấy <strong>@Model.Count()</strong> từ</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">Không có từ nào phù hợp.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-dark table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Từ</th>
+                    <th>Phiên âm</th>
+                    <th>Nghĩa</th>
+                    <th>Chủ đề</th>
+                    <th>Độ khó</th>
+                    <th>Ví dụ</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model)
+                {
+                    <tr>
+                        <td class="fw-bold text-info">@v.Word</td>
+                        <td class="text-light">@v.Pronunciation</td>
+                        <td>@v.Meaning</td>
+                        <td>@v.Topic.Name</td>
+                        <td>@v.Level</td>
+                        <td class="text-secondary">@v.Example</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-light btn-sm"
+                                    data-word="@v.Word" onclick="speakWord(this.dataset.word)">
+                                🔊
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section scripts {
+    <script>
+        function speakWord(text) {
+            if (!('speechSynthesis' in window)) { alert('Trình duyệt không hỗ trợ phát âm'); return; }
+            window.speechSynthesis.cancel();
+            var u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US';
+            u.rate = 0.9;
+            window.speechSynthesis.speak(u);
+        }
+    </script>
+}

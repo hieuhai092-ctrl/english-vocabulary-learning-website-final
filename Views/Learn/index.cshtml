@@ -1,0 +1,208 @@
+﻿@model IEnumerable<English_Vocabulary_Learning_Website.Models.Topic>
+@{
+    ViewBag.Title = "Trang chủ - Học từ vựng tiếng Anh";
+    var userResults = ViewBag.UserResults as List<English_Vocabulary_Learning_Website.Models.Result> ?? new List<English_Vocabulary_Learning_Website.Models.Result>();
+}
+
+<style>
+    /* Banner nổi bật với hiệu ứng Gradient hiện đại */
+    .hero-banner {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%);
+        border: 1px solid rgba(52, 211, 153, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* Hiệu ứng ánh sáng mờ trang trí góc Banner */
+        .hero-banner::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+    .hero-title {
+        background: linear-gradient(to right, #34d399, #38bdf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Thiết kế lại Card theo phong cách Dark-Glass đồng bộ với trang web */
+    .topic-card {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+        .topic-card:hover {
+            transform: translateY(-6px);
+            border-color: #34d399;
+            box-shadow: 0 12px 24px rgba(16, 185, 129, 0.15) !important;
+        }
+
+    .topic-img-wrapper {
+        overflow: hidden;
+        height: 185px;
+        position: relative;
+    }
+
+    .topic-card .card-img-top {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .topic-card:hover .card-img-top {
+        transform: scale(1.08);
+    }
+
+    /* Sửa lỗi chữ tiêu đề bị tàng hình trên nền sáng/tối */
+    .topic-title {
+        color: #f8fafc !important;
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .topic-desc {
+        color: #94a3b8 !important;
+        font-size: 0.92rem;
+        line-height: 1.5;
+    }
+
+    /* Badge trạng thái học tập */
+    .status-badge-done {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 8px;
+        font-size: 13.5px;
+    }
+
+    .status-badge-new {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 8px;
+        font-size: 13.5px;
+    }
+
+    /* Nút bấm hiện đại */
+    .btn-flashcard {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 7px 14px;
+        transition: opacity 0.2s;
+    }
+
+        .btn-flashcard:hover {
+            opacity: 0.9;
+            color: #fff;
+        }
+
+    .btn-quiz {
+        background: linear-gradient(135deg, #10b981, #059669);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 7px 14px;
+        transition: opacity 0.2s;
+    }
+
+        .btn-quiz:hover {
+            opacity: 0.9;
+            color: #fff;
+        }
+</style>
+
+<div class="container mt-4 pb-5">
+    <!-- Banner đầu trang -->
+    <div class="p-4 p-md-5 mb-5 hero-banner rounded-4">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 mb-2 px-3 py-1 rounded-pill">
+                    ✨ Nâng cao vốn từ mỗi ngày
+                </span>
+                <h1 class="display-5 fw-bold hero-title mb-3">English Vocabulary Learning</h1>
+                <p class="fs-5 text-light opacity-75 mb-0">
+                    Học từ vựng hiệu quả mỗi ngày qua hệ thống Flashcard trực quan và bài kiểm tra trắc nghiệm tương tác thông minh.
+                </p>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block text-end">
+                <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=400&q=80"
+                     alt="Vocabulary Banner"
+                     class="rounded-3 shadow-lg"
+                     style="max-height: 150px; object-fit: cover; border: 2px solid rgba(52, 211, 153, 0.4);">
+            </div>
+        </div>
+    </div>
+
+    <!-- Tiêu đề danh sách -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="fw-bold text-white mb-0" style="border-left: 4px solid #34d399; padding-left: 12px;">
+            Danh sách Chủ đề học tập
+        </h2>
+        <span class="text-secondary small">Tổng cộng: @Model.Count() chủ đề</span>
+    </div>
+
+    <!-- Danh sách Card giữ nguyên lưới 3 cột (col-md-4) -->
+    <div class="row">
+        @foreach (var topic in Model)
+        {
+            var latestResult = userResults.Where(r => r.TopicId == topic.Id).OrderByDescending(r => r.CompletedAt).FirstOrDefault();
+            var coverImg = !string.IsNullOrEmpty(topic.ImageUrl)
+                ? topic.ImageUrl
+                : "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=600&q=80";
+
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm topic-card">
+                    <div class="topic-img-wrapper">
+                        <img src="@coverImg" class="card-img-top" alt="@topic.Name">
+                    </div>
+
+                    <div class="card-body d-flex flex-column p-4">
+                        <h4 class="card-title topic-title">@topic.Name</h4>
+                        <p class="card-text topic-desc">@topic.Description</p>
+
+                        <div class="mt-auto pt-3">
+                            @if (latestResult != null)
+                            {
+                                <div class="status-badge-done py-2 px-2 mb-3 text-center">
+                                    ✓ Đã làm: <b>@latestResult.Score / @latestResult.TotalQuestions câu</b>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="status-badge-new py-2 px-2 mb-3 text-center">
+                                    ⚡ Chưa học chủ đề này
+                                </div>
+                            }
+
+                            <div class="d-flex justify-content-between gap-2 mt-2">
+                                <a href="@Url.Action("Flashcard", "Learn", new { topicId = topic.Id })" class="btn btn-flashcard btn-sm flex-fill text-center">
+                                    📖 Học Flashcard
+                                </a>
+                                <a href="@Url.Action("TakeQuiz", "Learn", new { topicId = topic.Id })" class="btn btn-quiz btn-sm flex-fill text-center">
+                                    ✍️ Làm Quiz
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

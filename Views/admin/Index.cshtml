@@ -1,0 +1,297 @@
+﻿@model IEnumerable<English_Vocabulary_Learning_Website.Models.Topic>
+@{
+    ViewBag.Title = "Quản lý Chủ đề - Admin";
+}
+
+<style>
+    /* Header Banner cho trang Admin */
+    .admin-header-card {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #064e3b 100%);
+        border: 1px solid rgba(52, 211, 153, 0.25);
+        border-radius: 16px;
+        padding: 24px 28px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    .admin-title {
+        background: linear-gradient(to right, #34d399, #38bdf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+
+    /* Ô tìm kiếm hiện đại */
+    .search-input-dark {
+        background-color: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid #334155 !important;
+        color: #f8fafc !important;
+        border-radius: 50px !important;
+        padding: 8px 20px;
+        min-width: 240px;
+        transition: all 0.3s ease;
+    }
+
+        .search-input-dark:focus {
+            border-color: #34d399 !important;
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2) !important;
+        }
+
+    .btn-search-glow {
+        border-radius: 50px;
+        border: 1px solid #34d399;
+        color: #34d399;
+        background: rgba(16, 185, 129, 0.1);
+        font-weight: 600;
+        padding: 8px 20px;
+        transition: all 0.25s ease;
+    }
+
+        .btn-search-glow:hover {
+            background: #10b981;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+
+    .btn-add-topic {
+        background: linear-gradient(135deg, #10b981, #059669);
+        border: none;
+        color: #fff !important;
+        font-weight: 600;
+        border-radius: 50px;
+        padding: 9px 22px;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .btn-add-topic:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+
+    /* Bảng dữ liệu phong cách Dark Glass */
+    .admin-table-wrapper {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .table-admin {
+        margin-bottom: 0;
+        color: #e2e8f0;
+    }
+
+        .table-admin thead {
+            background: linear-gradient(90deg, #0f172a, #1e293b);
+            border-bottom: 2px solid #334155;
+        }
+
+            .table-admin thead th {
+                color: #94a3b8;
+                font-weight: 700;
+                text-transform: uppercase;
+                font-size: 0.82rem;
+                letter-spacing: 0.5px;
+                padding: 16px 20px;
+                border: none;
+            }
+
+        .table-admin tbody tr {
+            border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+            transition: background-color 0.25s ease;
+        }
+
+            .table-admin tbody tr:hover {
+                background-color: rgba(52, 211, 153, 0.06);
+            }
+
+        .table-admin td {
+            padding: 16px 20px;
+            vertical-align: middle;
+            border: none;
+        }
+
+    /* Ảnh Thumbnail chủ đề */
+    .topic-thumb-box {
+        width: 85px;
+        height: 54px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 2px solid #334155;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        margin: 0 auto;
+    }
+
+        .topic-thumb-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.35s ease;
+        }
+
+    .table-admin tbody tr:hover .topic-thumb-box img {
+        transform: scale(1.15);
+    }
+
+    /* Các nút hành động Pill sinh động */
+    .btn-pill-action {
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        padding: 6px 14px;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+        .btn-pill-action:hover {
+            transform: translateY(-2px);
+            color: #fff;
+        }
+
+    .btn-vocab {
+        background: linear-gradient(135deg, #06b6d4, #0284c7);
+        color: #fff;
+        box-shadow: 0 3px 10px rgba(6, 182, 212, 0.3);
+    }
+
+    .btn-quiz-admin {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: #fff;
+        box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-edit-admin {
+        background: rgba(148, 163, 184, 0.2);
+        color: #e2e8f0;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+        .btn-edit-admin:hover {
+            background: #64748b;
+        }
+
+    .btn-delete-admin {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+        box-shadow: 0 3px 10px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-back-learn {
+        border-radius: 50px;
+        border: 1px solid #475569;
+        color: #cbd5e1;
+        padding: 8px 20px;
+        transition: all 0.25s ease;
+    }
+
+        .btn-back-learn:hover {
+            background-color: #334155;
+            color: #fff;
+            border-color: #34d399;
+        }
+</style>
+
+<div class="container mt-4 pb-5">
+    <!-- Thông báo lỗi nếu xóa chủ đề đang chứa từ vựng/câu hỏi -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-4 mb-4" role="alert">
+            ⚠️ <strong>Lỗi:</strong> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Khung tiêu đề & Thanh công cụ -->
+    <div class="admin-header-card mb-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-1 rounded-pill mb-2">
+                    ⚙️ Bảng điều khiển hệ thống
+                </span>
+                <h2 class="admin-title mb-1">Quản lý Chủ đề học tập</h2>
+                <p class="text-secondary small mb-0">Thêm mới, chỉnh sửa kho từ vựng và ngân hàng câu hỏi trắc nghiệm</p>
+            </div>
+
+            <!-- Form tìm kiếm + Nút thêm mới -->
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                @using (Html.BeginForm("Index", "Admin", FormMethod.Get, new { @class = "d-flex align-items-center gap-2" }))
+                {
+                    <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control search-input-dark" placeholder="🔍 Tìm kiếm chủ đề..." />
+                    <button type="submit" class="btn btn-search-glow">Tìm kiếm</button>
+                }
+
+                <a href="@Url.Action("CreateTopic", "Admin")" class="btn btn-add-topic ms-md-2">
+                    ➕ Thêm chủ đề mới
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng danh sách chủ đề -->
+    <div class="admin-table-wrapper">
+        <div class="table-responsive">
+            <table class="table table-admin align-middle">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Tên chủ đề</th>
+                        <th style="width: 32%;">Mô tả</th>
+                        <th class="text-center" style="width: 14%;">Hình ảnh</th>
+                        <th class="text-center" style="width: 34%;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var thumbImg = !string.IsNullOrEmpty(item.ImageUrl)
+                            ? item.ImageUrl
+                            : "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=300&q=80";
+
+                        <tr>
+                            <td>
+                                <div class="fw-bold fs-6" style="color: #34d399;">@item.Name</div>
+                                <span class="text-secondary" style="font-size: 12px;">ID: #@item.Id</span>
+                            </td>
+                            <td class="text-light opacity-75">
+                                @item.Description
+                            </td>
+                            <td class="text-center">
+                                <div class="topic-thumb-box">
+                                    <img src="@thumbImg" alt="@item.Name" />
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    <a href="@Url.Action("VocabularyList", "Admin", new { topicId = item.Id })" class="btn-pill-action btn-vocab">
+                                        📘 Từ vựng
+                                    </a>
+                                    <a href="@Url.Action("QuizList", "Admin", new { topicId = item.Id })" class="btn-pill-action btn-quiz-admin">
+                                        📝 Trắc nghiệm
+                                    </a>
+                                    <a href="@Url.Action("EditTopic", "Admin", new { id = item.Id })" class="btn-pill-action btn-edit-admin">
+                                        ✏️ Sửa
+                                    </a>
+                                    <a href="@Url.Action("DeleteTopic", "Admin", new { id = item.Id })" class="btn-pill-action btn-delete-admin" onclick="return confirm('Bạn có chắc chắn muốn xóa chủ đề @item.Name không?');">
+                                        🗑️ Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Nút quay lại -->
+    <div class="mt-4 d-flex justify-content-between align-items-center">
+        <a href="@Url.Action("Index", "Learn")" class="btn btn-back-learn">
+            ⬅️ Về trang học tập
+        </a>
+        <span class="text-secondary small">Hiển thị @Model.Count() chủ đề trong hệ thống</span>
+    </div>
+</div>

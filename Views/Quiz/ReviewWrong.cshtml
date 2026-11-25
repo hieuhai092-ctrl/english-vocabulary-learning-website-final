@@ -1,0 +1,66 @@
+﻿@model IEnumerable<English_Vocabulary_Learning_Website.Models.Quiz>
+
+@{
+    ViewBag.Title = "Ôn lại câu sai";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-danger fw-bold mb-3 text-center">ÔN LẠI CÂU SAI</h2>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-success text-center">
+                    🎉 Bạn không có câu sai nào cần ôn.
+                    <a href="@Url.Action("Index", "Quiz")" class="alert-link">Làm thêm quiz</a>
+                </div>
+            }
+            else
+            {
+                <p class="text-center text-light opacity-75 mb-4">
+                    Trả lời đúng một câu thì câu đó sẽ được bỏ khỏi danh sách ôn.
+                </p>
+
+                <form action="@Url.Action("SubmitReview", "Quiz")" method="post">
+                    @{ int index = 1; }
+                    @foreach (var question in Model)
+                    {
+                        var opts = new[]
+                        {
+                            new { Letter = "A", Text = question.OptionA },
+                            new { Letter = "B", Text = question.OptionB },
+                            new { Letter = "C", Text = question.OptionC },
+                            new { Letter = "D", Text = question.OptionD }
+                        };
+
+                        <input type="hidden" name="ids" value="@question.Id" />
+
+                        <div class="card mb-4 bg-black text-light border-secondary shadow-sm rounded-4 p-3">
+                            <div class="card-body">
+                                <h5 class="text-warning mb-3">
+                                    Câu @(index++): @question.Question
+                                    <span class="badge bg-secondary ms-2">@question.Topic.Name</span>
+                                </h5>
+
+                                @foreach (var o in opts)
+                                {
+                                    string optId = "opt" + o.Letter + "_" + question.Id;
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="question_@question.Id" id="@optId" value="@o.Letter" required />
+                                        <label class="form-check-label text-light opacity-75" for="@optId">@o.Letter. @o.Text</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-danger btn-lg px-5 rounded-pill shadow">Nộp bài ôn</button>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>

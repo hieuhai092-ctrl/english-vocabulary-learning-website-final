@@ -1,0 +1,305 @@
+﻿@{
+    ViewBag.Title = "Giới thiệu - English Vocabulary Learning";
+}
+
+<style>
+    /* Hero Section chuẩn Landing Page thương mại */
+    .about-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #064e3b 100%);
+        border: 1px solid rgba(52, 211, 153, 0.25);
+        border-radius: 24px;
+        padding: 48px 36px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+        .about-hero::before {
+            content: "";
+            position: absolute;
+            top: -80px;
+            left: -80px;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+    .gradient-heading {
+        background: linear-gradient(to right, #34d399, #38bdf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+
+    /* Thanh thống kê nổi bật (Stats Bar) */
+    .stat-box {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 16px;
+        padding: 24px 16px;
+        text-align: center;
+        transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            border-color: #34d399;
+        }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #34d399;
+        line-height: 1.2;
+    }
+
+    .stat-label {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        margin-top: 6px;
+    }
+
+    /* Thẻ nội dung tính năng & sứ mệnh */
+    .feature-card {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 20px;
+        padding: 32px;
+        height: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+
+        .feature-card:hover {
+            border-color: rgba(52, 211, 153, 0.5);
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.12);
+        }
+
+    .icon-circle {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .icon-emerald {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .icon-sky {
+        background: rgba(56, 189, 248, 0.15);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .custom-check-list {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+        .custom-check-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 14px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+            .custom-check-list li::before {
+                content: "✓";
+                position: absolute;
+                left: 0;
+                top: 1px;
+                width: 20px;
+                height: 20px;
+                background: rgba(16, 185, 129, 0.2);
+                color: #34d399;
+                border-radius: 50%;
+                font-size: 12px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+    /* Quy trình 3 bước */
+    .step-card {
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        border: 1px solid #334155;
+        border-radius: 16px;
+        padding: 24px;
+        position: relative;
+    }
+
+    .step-number {
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #38bdf8;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* Khối CTA cuối trang */
+    .cta-banner {
+        background: linear-gradient(135deg, #059669 0%, #0284c7 100%);
+        border-radius: 20px;
+        padding: 36px;
+        color: #fff;
+        box-shadow: 0 12px 30px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-cta-white {
+        background-color: #ffffff;
+        color: #0f172a !important;
+        font-weight: 700;
+        border-radius: 50px;
+        padding: 12px 28px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: none;
+    }
+
+        .btn-cta-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+</style>
+
+<div class="container mt-4 pb-5">
+    <!-- 1. Hero Section giới thiệu thương hiệu -->
+    <div class="about-hero mb-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill mb-3">
+                    🌐 Nền tảng học ngoại ngữ thế hệ mới
+                </span>
+                <h1 class="display-5 gradient-heading mb-3">
+                    Chinh phục từ vựng tiếng Anh tự nhiên & bền vững
+                </h1>
+                <p class="fs-5 text-light opacity-75 mb-4" style="line-height: 1.7;">
+                    <strong>English App</strong> kết hợp phương pháp ghi nhớ chủ động qua thẻ thông minh (Smart Flashcards) và hệ thống đánh giá năng lực thời gian thực, giúp bạn biến từ vựng mới thành phản xạ giao tiếp hàng ngày.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="@Url.Action("Index", "Learn")" class="btn btn-success px-4 py-2 rounded-pill fw-semibold">
+                        🚀 Khám phá kho chủ đề
+                    </a>
+                    <a href="@Url.Action("Contact", "Home")" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                        Liên hệ đội ngũ
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=80"
+                     alt="Học tiếng Anh hiện đại"
+                     class="img-fluid rounded-4 shadow-lg"
+                     style="border: 2px solid rgba(52, 211, 153, 0.35); max-height: 300px; object-fit: cover; width: 100%;">
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Thanh thông số tạo độ tin cậy như web thương mại -->
+    <div class="row g-3 mb-5">
+        <div class="col-6 col-md-3">
+            <div class="stat-box">
+                <div class="stat-number">1,500+</div>
+                <div class="stat-label">Từ vựng chọn lọc</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-box">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Chủ đề thực tiễn</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-box">
+                <div class="stat-number">94%</div>
+                <div class="stat-label">Tỷ lệ ghi nhớ sau 7 ngày</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-box">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Học mọi lúc mọi nơi</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Sứ mệnh & Giá trị cốt lõi (Nâng cấp từ 2 khung cũ) -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="feature-card">
+                <div class="icon-circle icon-emerald">🎯</div>
+                <h3 class="text-white fw-bold mb-3">Sứ mệnh của chúng tôi</h3>
+                <p class="text-light opacity-75 mb-3" style="line-height: 1.7;">
+                    Chúng tôi tin rằng rào cản lớn nhất khi học ngoại ngữ không nằm ở ngữ pháp phức tạp, mà là sự thiếu hụt vốn từ vựng ứng dụng.
+                </p>
+                <p class="text-light opacity-75 mb-0" style="line-height: 1.7;">
+                    <strong>English App</strong> ra đời để xóa bỏ cách học "vẹt" truyền thống, mang đến lộ trình tiếp thu từ vựng theo ngữ cảnh trực quan, giúp người học tự tin sử dụng tiếng Anh trong công việc, công nghệ và du lịch quốc tế.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="feature-card">
+                <div class="icon-circle icon-sky">🚀</div>
+                <h3 class="text-white fw-bold mb-3">Trải nghiệm học tập vượt trội</h3>
+                <ul class="custom-check-list">
+                    <li><strong>Học từ vựng đa giác quan (Flashcard):</strong> Kết hợp hình ảnh trực quan, phiên âm chuẩn và ví dụ thực tế giúp não bộ ghi nhớ sâu.</li>
+                    <li><strong>Đánh giá năng lực tức thì (Interactive Quiz):</strong> Hệ thống bài kiểm tra trắc nghiệm thông minh tự động chấm điểm và phân tích kết quả ngay sau khi nộp bài.</li>
+                    <li><strong>Theo dõi lịch sử tiến bộ:</strong> Lưu trữ toàn bộ quá trình ôn luyện giúp bạn dễ dàng nhận diện điểm mạnh và các chủ đề cần củng cố.</li>
+                    <li><strong>Tối ưu hóa đa nền tảng:</strong> Giao diện Dark Mode bảo vệ thị lực, hiển thị mượt mà trên cả máy tính, máy tính bảng và điện thoại.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Lộ trình 3 bước học hiệu quả -->
+    <div class="mb-5">
+        <div class="text-center mb-4">
+            <h2 class="text-white fw-bold">Lộ trình 3 bước làm chủ từ vựng</h2>
+            <p class="text-secondary">Phương pháp tối giản chỉ với 15 phút mỗi ngày</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="step-card h-100">
+                    <span class="step-number">Bước 01</span>
+                    <h5 class="text-white fw-bold mb-2">Chọn chủ đề yêu thích</h5>
+                    <p class="text-secondary small mb-0">Lựa chọn các bộ từ vựng sát với nhu cầu thực tế như Công nghệ thông tin, Du lịch, Giao tiếp văn phòng...</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card h-100">
+                    <span class="step-number">Bước 02</span>
+                    <h5 class="text-white fw-bold mb-2">Lật thẻ Flashcard ghi nhớ</h5>
+                    <p class="text-secondary small mb-0">Tương tác trực tiếp với thẻ từ vựng hai mặt để nắm vững mặt chữ, nghĩa tiếng Việt và ngữ cảnh sử dụng.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step-card h-100">
+                    <span class="step-number">Bước 03</span>
+                    <h5 class="text-white fw-bold mb-2">Thử thách với bài Quiz</h5>
+                    <p class="text-secondary small mb-0">Củng cố trí nhớ dài hạn thông qua bài kiểm tra trắc nghiệm và lưu lại bảng điểm thành tích cá nhân.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Banner kêu gọi hành động (Call To Action) -->
+    <div class="cta-banner d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <h3 class="fw-bold mb-1">Sẵn sàng nâng cấp vốn từ vựng của bạn hôm nay?</h3>
+            <p class="mb-0 opacity-90">Bắt đầu hoàn toàn miễn phí với hàng trăm thẻ từ vựng sinh động.</p>
+        </div>
+        <a href="@Url.Action("Index", "Learn")" class="btn btn-cta-white">
+            Bắt đầu học ngay →
+        </a>
+    </div>
+</div>

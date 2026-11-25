@@ -1,0 +1,62 @@
+﻿@using English_Vocabulary_Learning_Website.Models
+
+@{
+    ViewBag.Title = "Kết quả bài kiểm tra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    int score = Convert.ToInt32(ViewBag.Score);
+    int total = Convert.ToInt32(ViewBag.Total);
+    var review = ViewBag.Review as List<QuizReviewItem> ?? new List<QuizReviewItem>();
+    int wrong = total - score;
+}
+
+<div class="container py-4" style="max-width: 800px;">
+    <div class="card bg-black border-secondary text-center p-4 mb-4 rounded-4 shadow">
+        <h2 class="text-success fw-bold">KẾT QUẢ BÀI KIỂM TRA</h2>
+        <h1 class="display-3 fw-bold text-warning my-3">@score / @total</h1>
+        <p class="text-light mb-0">
+            Đúng <strong class="text-success">@score</strong> câu,
+            sai <strong class="text-danger">@wrong</strong> câu
+        </p>
+    </div>
+
+    <h4 class="text-light mb-3">Xem lại từng câu</h4>
+
+    @{ int index = 1; }
+    @foreach (var item in review)
+    {
+        <div class="card mb-3 rounded-4 shadow-sm bg-black text-light @(item.IsCorrect ? "border-success" : "border-danger")">
+            <div class="card-body">
+                <h6 class="mb-3">
+                    <span class="badge @(item.IsCorrect ? "bg-success" : "bg-danger") me-2">
+                        @(item.IsCorrect ? "Đúng" : "Sai")
+                    </span>
+                    Câu @(index++): @item.Question
+                </h6>
+
+                @if (item.IsCorrect)
+                {
+                    <div class="text-success">✔ Bạn chọn: @item.CorrectLetter. @item.CorrectText</div>
+                }
+                else
+                {
+                    <div class="text-danger">✘ Bạn chọn: @(string.IsNullOrEmpty(item.UserLetter) ? "" : item.UserLetter + ". ")@item.UserText</div>
+                    <div class="text-success">✔ Đáp án đúng: @item.CorrectLetter. @item.CorrectText</div>
+                }
+            </div>
+        </div>
+    }
+
+<div class="d-flex justify-content-center gap-3 mt-4">
+    @if (ViewBag.IsReview == true)
+    {
+        <a href="@Url.Action("ReviewWrong", "Quiz")" class="btn btn-warning rounded-pill px-4">Ôn tiếp</a>
+    }
+    else
+    {
+        <a href="@Url.Action("Index", "Quiz", new { topicId = ViewBag.TopicId })" class="btn btn-success rounded-pill px-4">Làm lại</a>
+    }
+    <a href="@Url.Action("Index", "Learn")" class="btn btn-outline-light rounded-pill px-4">Về trang chủ</a>
+    <a href="@Url.Action("History", "Quiz")" class="btn btn-outline-secondary rounded-pill px-4">Lịch sử làm bài</a>
+</div>
+</div>

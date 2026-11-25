@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "Liên hệ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Khung tiêu đề đồng bộ màu sắc với toàn bộ website */
+    .contact-header-box {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #064e3b 100%);
+        border: 1px solid rgba(52, 211, 153, 0.25);
+        border-radius: 20px;
+        padding: 36px 24px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .contact-gradient-title {
+        background: linear-gradient(to right, #34d399, #38bdf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Card 2 cột tông tối sang trọng */
+    .contact-card-modern {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+        .contact-card-modern:hover {
+            border-color: rgba(52, 211, 153, 0.45);
+        }
+
+    /* Từng dòng thông tin bên cột trái */
+    .contact-info-row {
+        background-color: rgba(15, 23, 42, 0.65);
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 14px;
+        color: #e2e8f0;
+        transition: all 0.25s ease;
+    }
+
+        .contact-info-row:hover {
+            border-color: #34d399;
+            transform: translateX(4px);
+        }
+
+        .contact-info-row strong {
+            color: #34d399;
+        }
+
+    /* Ô nhập liệu */
+    .input-modern {
+        background-color: #0f172a !important;
+        border: 1px solid #334155 !important;
+        color: #f8fafc !important;
+        border-radius: 12px !important;
+        padding: 11px 15px;
+        transition: all 0.25s ease;
+    }
+
+        .input-modern::placeholder {
+            color: #64748b;
+        }
+
+        .input-modern:focus {
+            border-color: #34d399 !important;
+            box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2) !important;
+        }
+
+    /* Nút gửi tin nhắn */
+    .btn-send-modern {
+        background: linear-gradient(135deg, #10b981, #059669);
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-weight: 700;
+        padding: 12px;
+        box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+        transition: all 0.25s ease;
+    }
+
+        .btn-send-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(16, 185, 129, 0.5);
+            color: #fff;
+        }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-10">
+            <div class="contact-header-box text-center">
+                <h1 class="fw-bold contact-gradient-title mb-3">Liên hệ với chúng tôi</h1>
+                <p class="text-light opacity-75 lead mb-0">Bạn có thắc mắc hoặc cần góp ý về đồ án? Hãy gửi thông tin cho chúng tôi nhé!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-5">
+            <div class="contact-card-modern text-light h-100">
+                <h4 class="fw-bold mb-4" style="color: #34d399;">📍 Thông tin nhóm</h4>
+                <div class="contact-info-row">
+                    <strong>Trường:</strong> Đại học Ngoại ngữ - Tin học TP.HCM (HUFLIT)
+                </div>
+                <div class="contact-info-row">
+                    <strong>Đồ án:</strong> Website học từ vựng tiếng Anh (ASP.NET MVC)
+                </div>
+                <div class="contact-info-row">
+                    <strong>Email hỗ trợ:</strong> <span class="text-info">support@englishapp.local</span>
+                </div>
+                <div class="contact-info-row mb-0">
+                    <strong>Hotline:</strong> <span class="text-warning">0123 456 789</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="contact-card-modern text-light">
+                <h4 class="fw-bold mb-4" style="color: #38bdf8;">💬 Gửi phản hồi</h4>
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label text-light opacity-75 fw-semibold">Họ và tên</label>
+                        <input type="text" class="form-control input-modern" placeholder="Nhập họ tên của bạn..." required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-light opacity-75 fw-semibold">Email</label>
+                        <input type="email" class="form-control input-modern" placeholder="Nhập email của bạn..." required />
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-light opacity-75 fw-semibold">Nội dung</label>
+                        <textarea class="form-control input-modern" rows="4" placeholder="Nhập nội dung cần trao đổi..." required></textarea>
+                    </div>
+                    <button type="button" class="btn btn-send-modern w-100" onclick="alert('Cảm ơn bạn đã phản hồi! Chúng tôi sẽ phản hồi sớm nhất.')">
+                        🚀 Gửi tin nhắn
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
